@@ -23,28 +23,28 @@ def page(username):
     col1, col2 = st.columns(2)
 
     tickers2 = ('BTC', 'ETH', 'SOL', 'ADA', 'DOT', 'MATIC', 'EGLD', 'DOGE', 'XRP', 'BNB')
-    with col1: box01 = st.selectbox('From',tickers2, key = 'coin1') 
-    with col2: box02 = st.text_input('To','USD',disabled =True) #default USD
-    
+    with col1: box02 = st.text_input('From','USD',disabled =True) #default USD
+    with col2: box01 = st.selectbox('To',tickers2, key = 'coin1') 
     columns = st.columns((2, 1, 2))
     quantity = columns[0].number_input('Quantity')
 
     if box01 != 'USD' and box02 != 'USD':
-        price1 = get_historical(box01, start_date= None, end_date = None, period = '1d')['Close'].iloc[-1]
-        price2 = get_historical(box02, start_date= None, end_date = None, period = '1d')['Close'].iloc[-1]
+        price1 = get_historical(box01, start_date= None, end_date = None, period = '1m')['Close'].iloc[-1]
+        price2 = get_historical(box02, start_date= None, end_date = None, period = '1m')['Close'].iloc[-1]
         convert = float(quantity*price1/price2)
     elif box01 == 'USD' and box02 != 'USD':
-        price2 = get_historical(box02, start_date= None, end_date = None, period = '1d')['Close'].iloc[-1]
+        price2 = get_historical(box02, start_date= None, end_date = None, period = '1m')['Close'].iloc[-1]
         convert = float(quantity/price2)
     #box02 defaults to USD, box01 is the currency u trade
     elif box01 != 'USD' and box02 == 'USD':
-        price1 = get_historical(box01, start_date= None, end_date = None, period = '1d')['Close'].iloc[-1]
+        price1 = get_historical(box01, start_date= None, end_date = None, period = '1m')['Close'].iloc[-1]
         convert = float(quantity*price1)
+    
     else:
         convert = quantity
 
     columns = st.columns((1, 1))
-    columns[0].metric('',convert)  #show convert
+    columns[0].metric('Total Amount: ',str(round(convert,4))+" USD")  #show convert
     #convert=amount
 
     if st.button('Order'):
@@ -90,12 +90,13 @@ def updateHodingInfo(username,box01,convert,quantity,price1):
                         break
                     elif i['quantity'] +quantity<0: #enough to buy then update
                         remainingQuantity=i['quantity']+quantity
-                        HoldingDao.updateQuantity(remainingQuantity,dt2,i['holding_id'])
+                        amount=i['boughtprice']*remainingQuantity
+                        HoldingDao.updateQuantity(remainingQuantity,amount,dt2,i['holding_id'])
                         break
                     else: #last row holding quantity< sell quantity then delete current row and update last row 
                         quantity=i['quantity']+quantity
                         HoldingDao.deleteRowByholding_id(i['holding_id'])
-                        print(remainingQuantity)
+                        # print(remainingQuantity)
                         
         elif quantity<0: #if sell
             if totalQuantity<0: #also have - quantity holding
@@ -110,12 +111,13 @@ def updateHodingInfo(username,box01,convert,quantity,price1):
                     elif i['quantity']+quantity>0: # enough to sell and update 
                         remainingQuantity=i['quantity']+quantity
                         # print(remainingQuantity) 
-                        HoldingDao.updateQuantity(remainingQuantity,dt2,i['holding_id'])
+                        amount=i['boughtprice']*remainingQuantity
+                        HoldingDao.updateQuantity(remainingQuantity,amount,dt2,i['holding_id'])
                         break
                     else: #last row holding quantity< sell quantity then delete current row and update last row 
                         quantity=i['quantity']+quantity
                         HoldingDao.deleteRowByholding_id(i['holding_id'])
-                        print(remainingQuantity)
+                        # print(remainingQuantity)
                         
 
                 

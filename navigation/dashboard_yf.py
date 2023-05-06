@@ -24,14 +24,18 @@ def get_market(coin: str):
     '''This function extracts data from yfinance and returns a dataframe
     with insights according to the chosen crypto'''
 
-    coin = coin + "-USD"
-    stock = yf.Ticker(coin)
-    # print(stock.info)
+    coinUSD = coin + "-USD"
+    stock = yf.Ticker(coinUSD)
+
+    #no regularMarketPrice in lasted version yfinance so get the 1m price from history
+    price = get_historical(coin, start_date= None, end_date = None, period = '1m')['Close'].iloc[-1]
+
     info = {
         "priceHigh24h": stock.info['dayHigh'],
         "priceLow24h": stock.info['dayLow'],
         "volumeUsd24h": stock.info['volume24Hr'],
-        "price": stock.info['regularMarketPreviousClose'] #regularMarketPrice
+        "price":round(price,4)
+        # "price": stock.info['regularMarketPreviousClose'] #regularMarketPrice
     }
     return info
 

@@ -20,13 +20,13 @@ def page(name):
     # with top_menu[0]:
     #     sort = st.radio("Sort Data", options=["Yes", "No"], horizontal=1, index=1)
     # if sort == "Yes":
-    with top_menu[0]:
-        st.text("Total: "+str(len(dataset))+" Transactions")
+    # with top_menu[0]:
+    #     st.text("Total: "+str(len(dataset))+" Transactions")
     with top_menu[1]:
         sort_field = st.selectbox("Sort By", options=dataset.columns)
     with top_menu[2]:
         sort_direction = st.radio(
-            "Direction", options=["⬆️", "⬇️"], horizontal=True
+            "Direction", options=["⬇️","⬆️"], horizontal=True
         )
     dataset = dataset.sort_values(
         by=sort_field, ascending=sort_direction == "⬆️", ignore_index=True
@@ -55,11 +55,12 @@ def page(name):
             pagination.dataframe(data=pages[current_page - 1], use_container_width=True)
         else:
             st.write("No Trading Recode !")
+    st.text("Total: "+str(len(dataset))+" Transactions")
 
 def load_data(name,coin,start_date,end_date):
     if coin =='ALL':
         history = TradingDao.getAllHistoryByUsername(name,start_date,end_date)
-        print(history)
+        # print(history)
     else:
         history = TradingDao.getAllHistoryByUsernameCurrency(name,coin,start_date,end_date)
     

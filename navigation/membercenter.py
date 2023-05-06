@@ -13,10 +13,10 @@ def page(currentUser):
 
     st.markdown(
     "### &emsp; &emsp;  Username:  &emsp; "+currentUser+"\n"+
-    "### &emsp; &emsp;  Amount Available:  &emsp;"+str(cash)+" (USD)"
+    "### &emsp; &emsp;  Amount Available:  &emsp;"+str(round(cash,4))+" (USD)"
     )
     buff, col, buff2 = st.columns([0.03,0.1,0.5])
-    charge = col.text_input(label ='Charge Section (USD)',max_chars =10)
+    charge = col.number_input(label ='Charge Section (USD)',max_value =1000000000)
     buff, bt, buff2 = st.columns([0.03,0.1,0.5])
     if bt.button('Charge'):
         chargeToDb(cash,charge,currentUser)

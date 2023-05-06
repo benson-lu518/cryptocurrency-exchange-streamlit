@@ -1,6 +1,6 @@
 #main
 from pathlib import Path
-from navigation import dashboard_yf, trading, membercenter,history
+from navigation import dashboard_yf, trading, membercenter,history,inventory
 
 import streamlit as st  
 import streamlit_authenticator as stauth  
@@ -46,7 +46,7 @@ if loginState:
     #login
     authenticator = stauth.Authenticate(credentials, "app_home", "auth",cookie_expiry_days=30,preauthorized=True)
 
-    name, authentication_status, username = authenticator.login("Login", "main")
+    username, authentication_status,name  = authenticator.login("Login", "main")
    
 if authentication_status == False:
     
@@ -69,11 +69,12 @@ if authentication_status:
         '🏠 Member Center':membercenter.page,
         '📈 Crypto Dashboard': dashboard_yf.page,
         '💰 Trading System': trading.page,
-        '✅ Trading hitory': history.page
+        '✅ Trading Hitory': history.page,
+        '📝 Inventory':inventory.page
     }
 
     selected_page = st.sidebar.radio("Navigation", pages.keys())
-    pages[selected_page](name)
+    pages[selected_page](username)
 
 if registerState:
     try:
