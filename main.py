@@ -22,7 +22,7 @@ def fetch_data():
     return allUsernames,hashed_passwords
 
 
-def add_userdata(username,password,cash=0):
+def add_userdata(username,name,email,password,cash=0):
     userInfoByusername=UserDao.getUserByUsername(username)
     userInfoBypassword=UserDao.getUserByPassword(password)
 
@@ -31,7 +31,7 @@ def add_userdata(username,password,cash=0):
     elif len(userInfoBypassword) != 0:
         st.warning("Password has been registered ")
     else:
-        UserDao.insertUser(username,password,cash)
+        UserDao.insertUser(username,name,email,password,cash)
         st.success("You have successfully created a valid Account")
 
 
@@ -78,12 +78,11 @@ if authentication_status:
 if registerState:
     try:
         if authenticator.register_user(form_name='Register user',preauthorization=False):
-            username=credentials['usernames'][str(list(credentials['usernames'])[-1])]['name']
+            username=[str(list(credentials['usernames'])[-1])][0]
             password=credentials['usernames'][str(list(credentials['usernames'])[-1])]['password']
-            
-            print(username)
-            print(password)
-            add_userdata(username,password,cash=0)
+            email=credentials['usernames'][str(list(credentials['usernames'])[-1])]['email']
+            name=credentials['usernames'][str(list(credentials['usernames'])[-1])]['name']
+            add_userdata(username,name,email,password,cash=0)
 
     except Exception as e:
         st.error(e)

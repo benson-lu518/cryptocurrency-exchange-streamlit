@@ -43,8 +43,8 @@ class UserDao:
         c.execute('UPDATE userstable SET cash=? WHERE username=?',(remainCash,username))
         conn.commit()
 
-    def insertUser(username,password,cash):
-        c.execute('INSERT INTO userstable(username,password,cash) VALUES (?,?,?)',(username,password,cash))
+    def insertUser(username,name,email,password,cash):
+        c.execute('INSERT INTO userstable(username,name,email,password,cash) VALUES (?,?,?,?,?)',(username,name,email,password,cash))
         conn.commit()
 
     

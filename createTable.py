@@ -17,6 +17,8 @@ def create_table():
        CREATE TABLE IF NOT EXISTS userstable
        (
        username TEXT PRIMARY KEY,
+       name TEXT,
+       email TEXT,
        password TEXT,
        cash NUMERIC
        )
