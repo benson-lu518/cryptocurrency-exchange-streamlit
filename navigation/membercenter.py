@@ -1,9 +1,6 @@
 #membercenter
 import streamlit as st
-import sqlite3 
 from dao.UserDao import UserDao
-conn = sqlite3.connect('data.db', check_same_thread=False)
-c = conn.cursor()
 
 def page(currentUser):
 
