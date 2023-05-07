@@ -12,16 +12,14 @@ def page(name):
     end_date = st.sidebar.date_input('End Date', value = pd.Timestamp.now()+pd.DateOffset(days=1)  , key = 'dend_date')
     
     dataset=load_data(name,coin,start_date,end_date)
-     #start index from 1 not 0
-    # sdataset.index+=1 
-    #print(dataset)
+  
 
     top_menu = st.columns(3)
     # with top_menu[0]:
     #     sort = st.radio("Sort Data", options=["Yes", "No"], horizontal=1, index=1)
     # if sort == "Yes":
-    # with top_menu[0]:
-    #     st.text("Total: "+str(len(dataset))+" Transactions")
+    with top_menu[0]:
+        st.text("Total: "+str(len(dataset))+" Transactions")
     with top_menu[1]:
         sort_field = st.selectbox("Sort By", options=dataset.columns)
     with top_menu[2]:
@@ -55,7 +53,6 @@ def page(name):
             pagination.dataframe(data=pages[current_page - 1], use_container_width=True)
         else:
             st.write("No Trading Recode !")
-    st.text("Total: "+str(len(dataset))+" Transactions")
 
 def load_data(name,coin,start_date,end_date):
     if coin =='ALL':

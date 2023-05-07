@@ -36,18 +36,21 @@ def add_userdata(username,name,email,password,cash=0):
 
 
 if loginState:
-    #get registered users 
-    names,hashed_passwords=fetch_data()
-    credentials = {"usernames":{}} #to yaml format 
-    for un, n, pw in zip(names, names, hashed_passwords):
-        user_dict = {"name":n,"password":pw}
-        credentials["usernames"].update({un:user_dict})
+    try:
+        #get registered users 
+        names,hashed_passwords=fetch_data()
+        credentials = {"usernames":{}} #to yaml format 
+        for un, n, pw in zip(names, names, hashed_passwords):
+            user_dict = {"name":n,"password":pw}
+            credentials["usernames"].update({un:user_dict})
 
-    #login
-    authenticator = stauth.Authenticate(credentials, "app_home", "auth",cookie_expiry_days=30,preauthorized=True)
+        #login
+        authenticator = stauth.Authenticate(credentials, "app_home", "auth",cookie_expiry_days=30,preauthorized=True)
 
-    username, authentication_status,name  = authenticator.login("Login", "main")
-   
+        username, authentication_status,name  = authenticator.login("Login", "main")
+    except Exception as e:
+        st.error(e)
+
 if authentication_status == False:
     
     st.error("Useraccount/password is incorrect")
@@ -60,7 +63,7 @@ if authentication_status:
     registerState=False
     loginState=False
     authenticator.logout("Logout", "sidebar")
-    st.sidebar.title(f"Welcome {name}")
+    st.sidebar.title(f"Welcome {username}")
     st.sidebar.image(
     "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/z3ahdkytzwi1jxlpazje",
     width=50)

@@ -23,12 +23,14 @@ def get_market(coin: str):
 
     '''This function extracts data from yfinance and returns a dataframe
     with insights according to the chosen crypto'''
+    
+    #no regularMarketPrice provided in lasted version yfinance so get the 1m price from history
 
-    coinUSD = coin + "-USD"
-    stock = yf.Ticker(coinUSD)
-
-    #no regularMarketPrice in lasted version yfinance so get the 1m price from history
     price = get_historical(coin, start_date= None, end_date = None, period = '1m')['Close'].iloc[-1]
+
+    coin = coin + "-USD"
+    stock = yf.Ticker(coin)
+    #print(stock.info)
 
     info = {
         "priceHigh24h": stock.info['dayHigh'],
@@ -65,9 +67,10 @@ def page(currentUser):
     # Check periods
     check = st.radio('Filter', ['1D', '5D', '1M', '3M', '6M', '1Y', '2Y', 'All', 'None'], horizontal = True, index = 8)
 
+    #resolution: show the interval
     if check == 'None':
         start_date = st.sidebar.date_input('Start Date', value = pd.Timestamp.now()-pd.DateOffset(years=1), key = 'dstart_date')
-        end_date = st.sidebar.date_input('End Date', value = pd.Timestamp.now()  , key = 'dend_date')
+        end_date = st.sidebar.date_input('End Date', value = pd.Timestamp.now()+pd.DateOffset(days=1)  , key = 'dend_date')
         resolution = st.select_slider('Resolution', options = ["1d", "5d", "1mo"], value = "1d", key = 'Nresolution')
         coin_df = get_historical(coin, start_date, end_date, interval = resolution)
 
@@ -109,10 +112,11 @@ def page(currentUser):
 
     # Moving average - 30weeks
     coin_df['30wma'] = coin_df['Close'].rolling(30).mean()
-    variance = round(np.var(coin_df['Close']),3)
+    # variance = round(np.var(coin_df['Close']),3)
     
-    # Candle and volume chart
+    #volume chart 
     fig = make_subplots(rows = 2, cols = 1, shared_xaxes = True, vertical_spacing = 0.1, row_heights = [100,30])
+    # Candle 
     fig.add_trace(
         go.Candlestick(x = coin_df['Date'],
                         open = coin_df['Open'], high = coin_df['High'],
@@ -122,7 +126,7 @@ def page(currentUser):
     )
 
     fig.update_layout(xaxis_rangeslider_visible = False)
-
+    # MA
     fig.add_trace(
         go.Scatter(
             x = coin_df['Date'],
@@ -132,6 +136,7 @@ def page(currentUser):
         ), row = 1, col = 1
     )
 
+    #Volumn
     # Bar chart https://plotly.com/python-api-reference/generated/plotly.graph_objects.bar.html#plotly.graph_objects.bar.Marker
     fig.add_trace(
         go.Bar(
@@ -141,6 +146,7 @@ def page(currentUser):
             name = 'Volume'
         ), row = 2, col = 1
     )
+    #volumn subplot
     fig['layout']['xaxis2']['title'] = 'Date'
     fig['layout']['yaxis']['title'] = 'Price'
     fig['layout']['yaxis2']['title'] = 'Volume'

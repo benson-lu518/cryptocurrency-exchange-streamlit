@@ -19,7 +19,7 @@ def getCurrentTime():
 # Crypto/USD Calculator
 def page(username):
     # Crypto/USD Calculator
-    st.title('💥 Cryptocurrency Trading System')
+    st.title('💥 Crypto Trading System')
     col1, col2 = st.columns(2)
 
     tickers2 = ('BTC', 'ETH', 'SOL', 'ADA', 'DOT', 'MATIC', 'EGLD', 'DOGE', 'XRP', 'BNB')
