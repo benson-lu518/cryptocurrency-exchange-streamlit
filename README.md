@@ -2,7 +2,7 @@
 
 # About
 This project is a crypto exchange platform that provides users with a simulated real cryptocurrency investment experience. 
-Users can pay attention to market dynamics, review their own investment status, manage their own accounts and e-wallets.  
+Users can pay attention to market dynamics, review their own investment status, and manage their own accounts and e-wallets.  
 Still updating.................
 # Widgets
 0. Login/Register 
